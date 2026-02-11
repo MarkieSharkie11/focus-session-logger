@@ -10,12 +10,11 @@ struct FocusSessionLoggerApp: App {
             PopoverContentView(sessionManager: sessionManager)
                 .frame(width: 320)
         } label: {
-            if sessionManager.state == .idle {
-                Image(systemName: "timer")
-            } else {
-                Text(sessionManager.formattedTimeRemaining)
-                    .monospacedDigit()
-            }
+            Label(
+                sessionManager.state == .idle ? "" : sessionManager.formattedTimeRemaining,
+                systemImage: "timer"
+            )
+            .monospacedDigit()
         }
         .menuBarExtraStyle(.window)
     }

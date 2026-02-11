@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import SwiftUI
 
 final class SessionManager: ObservableObject {
     static let focusDuration: TimeInterval = 25 * 60
@@ -27,7 +28,7 @@ final class SessionManager: ObservableObject {
     }
 
     func startSession() {
-        state = .focusing
+        withAnimation(.easeInOut(duration: 0.3)) { state = .focusing }
         secondsRemaining = Int(Self.focusDuration)
         sessionStartTime = Date()
         startTimer()
@@ -35,7 +36,7 @@ final class SessionManager: ObservableObject {
 
     func cancelSession() {
         stopTimer()
-        state = .idle
+        withAnimation(.easeInOut(duration: 0.3)) { state = .idle }
         secondsRemaining = Int(Self.focusDuration)
         sessionStartTime = nil
     }
@@ -95,7 +96,7 @@ final class SessionManager: ObservableObject {
             body: "Great work! Take a 5-minute break."
         )
 
-        state = .onBreak
+        withAnimation(.easeInOut(duration: 0.3)) { state = .onBreak }
         secondsRemaining = Int(Self.breakDuration)
         startTimer()
     }
@@ -105,7 +106,7 @@ final class SessionManager: ObservableObject {
             title: "Break Over",
             body: "Ready for another focus session?"
         )
-        state = .idle
+        withAnimation(.easeInOut(duration: 0.3)) { state = .idle }
         secondsRemaining = Int(Self.focusDuration)
         sessionStartTime = nil
     }

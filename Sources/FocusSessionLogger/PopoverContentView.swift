@@ -11,10 +11,13 @@ struct PopoverContentView: View {
             switch sessionManager.state {
             case .idle:
                 idleView
+                    .transition(.opacity)
             case .focusing:
                 activeSessionView(label: "Focusing", color: sessionManager.selectedCategory.color)
+                    .transition(.opacity)
             case .onBreak:
                 activeSessionView(label: "Break", color: .green)
+                    .transition(.opacity)
             }
 
             Divider()
@@ -69,7 +72,7 @@ struct PopoverContentView: View {
             Button(action: { sessionManager.startSession() }) {
                 HStack {
                     Image(systemName: "play.fill")
-                    Text("Start Focus Session")
+                    Text("Start Session")
                 }
                 .font(.body.weight(.semibold))
                 .foregroundStyle(.white)
@@ -104,29 +107,34 @@ struct PopoverContentView: View {
                 .foregroundStyle(color)
 
             if sessionManager.state == .focusing {
-                VStack(spacing: 6) {
+                HStack(spacing: 6) {
                     Label(sessionManager.selectedCategory.rawValue,
                           systemImage: sessionManager.selectedCategory.icon)
-                        .font(.subheadline.weight(.medium))
-                        .foregroundStyle(sessionManager.selectedCategory.color)
+                    Text("*")
                     Label(sessionManager.selectedProject.rawValue,
                           systemImage: sessionManager.selectedProject.icon)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
                 }
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(.secondary)
             }
 
             ProgressView(value: progress)
                 .tint(color)
 
             if sessionManager.state == .focusing {
-                Button(role: .destructive) {
-                    sessionManager.cancelSession()
-                } label: {
-                    Text("Cancel Session")
-                        .frame(maxWidth: .infinity)
+                Button(action: { sessionManager.cancelSession() }) {
+                    HStack {
+                        Image(systemName: "xmark")
+                        Text("Cancel Session")
+                    }
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
+                    .background(Color.gray)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
-                .controlSize(.large)
+                .buttonStyle(.plain)
             }
         }
     }
